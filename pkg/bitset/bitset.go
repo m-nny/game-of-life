@@ -1,6 +1,9 @@
 package bitset
 
-import "strings"
+import (
+	"iter"
+	"strings"
+)
 
 // the bitmap is arranged with
 // the forward cells in bits 6-8,
@@ -18,10 +21,11 @@ import "strings"
 //	...  8  7  6  5  4  3  2  1  0
 //	... fb fm fu mb mm mu rb rm ru
 
-type bitset int32
+type Bitset int32
 
 const (
-	BS_SIZE = 9
+	BS_SIZE         = 9
+	ALL_BS_SET_SIZE = 1 << BS_SIZE
 
 	BS_RU_BIT = 1 << 0
 	BS_RM_BIT = 1 << 1
@@ -36,11 +40,15 @@ const (
 	BS_FB_BIT = 1 << 8
 )
 
-func (b *bitset) HasMid() bool {
+func (b *Bitset) HasMid() bool {
 	return ((*b) & BS_MM_BIT) > 0
 }
 
-func (b *bitset) SetForward(up, mid, bot bool) {
+func (b *Bitset) HasBit(i int) bool {
+	return ((*b) & (1 << i)) > 0
+}
+
+func (b *Bitset) SetForward(up, mid, bot bool) {
 	if up {
 		*b |= BS_FU_BIT
 	}
@@ -52,7 +60,7 @@ func (b *bitset) SetForward(up, mid, bot bool) {
 	}
 }
 
-func (b *bitset) Shift() {
+func (b *Bitset) Shift() {
 	(*b) >>= 3
 }
 
@@ -62,7 +70,7 @@ var reprOrder = [BS_SIZE]int{
 	BS_RB_BIT, BS_MB_BIT, BS_FB_BIT,
 }
 
-func (b *bitset) Repr() string {
+func (b *Bitset) Repr() string {
 	var builder strings.Builder
 	for i, bit := range reprOrder {
 		if (int(*b) & bit) > 0 {
@@ -75,4 +83,24 @@ func (b *bitset) Repr() string {
 		}
 	}
 	return builder.String()
+}
+
+func AllBitsets() iter.Seq[Bitset] {
+	return func(yield func(Bitset) bool) {
+		for b := Bitset(0); b < ALL_BS_SET_SIZE; b++ {
+			if !yield(b) {
+				return
+			}
+		}
+	}
+}
+
+func FromBoolSlice(s [BS_SIZE]bool) Bitset {
+	b := Bitset(0)
+	for i, item := range reprOrder {
+		if s[i] {
+			b |= Bitset(item)
+		}
+	}
+	return b
 }

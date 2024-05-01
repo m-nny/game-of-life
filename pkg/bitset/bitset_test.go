@@ -1,18 +1,17 @@
-package bitset
+package bitset_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
+	"minmax.uk/game-of-life/pkg/bitset"
 )
 
 func Test_Bitset(t *testing.T) {
-	b := bitset(0)
+	b := bitset.Bitset(0)
 	{
 		got := b.Repr()
 		want := "...\n...\n..."
-		fmt.Printf("b: %03o %03d\n", b, b)
 		require.Equalf(t, want, got, "want:\n%s\ngot:\n%s", want, got)
 	}
 
@@ -20,7 +19,6 @@ func Test_Bitset(t *testing.T) {
 		b.SetForward(true, false, false)
 		got := b.Repr()
 		want := "..#\n...\n..."
-		fmt.Printf("b: %03o %03d\n", b, b)
 		require.Equalf(t, want, got, "want:\n%s\ngot:\n%s", want, got)
 	}
 
@@ -28,7 +26,6 @@ func Test_Bitset(t *testing.T) {
 		b.Shift()
 		got := b.Repr()
 		want := ".#.\n...\n..."
-		fmt.Printf("b: %03o %03d\n", b, b)
 		require.Equalf(t, want, got, "want:\n%s\ngot:\n%s", want, got)
 	}
 
@@ -42,7 +39,6 @@ func Test_Bitset(t *testing.T) {
 	{
 		got := b.HasMid()
 		want := false
-		fmt.Printf("b: %03o %03d\n", b, b)
 		require.Equalf(t, want, got, "want:\n%v\ngot:\n%v", want, got)
 	}
 
@@ -50,14 +46,12 @@ func Test_Bitset(t *testing.T) {
 		b.Shift()
 		got := b.Repr()
 		want := "#..\n.#.\n..."
-		fmt.Printf("b: %03o %03d\n", b, b)
 		require.Equalf(t, want, got, "want:\n%s\ngot:\n%s", want, got)
 	}
 
 	{
 		got := b.HasMid()
 		want := true
-		fmt.Printf("b: %03o %03d\n", b, b)
 		require.Equalf(t, want, got, "want:\n%v\ngot:\n%v", want, got)
 	}
 
@@ -66,5 +60,48 @@ func Test_Bitset(t *testing.T) {
 		got := b.Repr()
 		want := "#..\n.#.\n..#"
 		require.Equalf(t, want, got, "want:\n%s\ngot:\n%s", want, got)
+	}
+}
+
+func Test_FromBoolSlice(t *testing.T) {
+	testCases := []struct {
+		name  string
+		slice [bitset.BS_SIZE]bool
+		want  string
+	}{
+		{
+			name: "empty",
+			slice: [bitset.BS_SIZE]bool{
+				false, false, false,
+				false, false, false,
+				false, false, false,
+			},
+			want: "...\n...\n...",
+		},
+		{
+			name: "diag",
+			slice: [bitset.BS_SIZE]bool{
+				true, false, false,
+				false, true, false,
+				false, false, true,
+			},
+			want: "#..\n.#.\n..#",
+		},
+		{
+			name: "top",
+			slice: [bitset.BS_SIZE]bool{
+				true, true, true,
+				false, false, false,
+				false, false, false,
+			},
+			want: "###\n...\n...",
+		},
+	}
+	for _, test := range testCases {
+		t.Run(test.name, func(t *testing.T) {
+			b := bitset.FromBoolSlice(test.slice)
+			got := b.Repr()
+			require.Equalf(t, test.want, got, "want:\n%s\ngot:\n%s", test.want, got)
+		})
 	}
 }
