@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -131,6 +132,31 @@ func Test_Next_4Rules(t *testing.T) {
 
 			initState.Iterate()
 			EqualBoards(t, test.want_state, initState.String())
+		})
+	}
+}
+
+func Benchmark_Iterate(b *testing.B) {
+	seed := int64(42)
+	bench_cases := []struct {
+		Cols int64
+		Rows int64
+	}{
+		{100, 100},
+		{1000, 100},
+		{1000, 1000},
+		{10000, 1000},
+	}
+	for _, test := range bench_cases {
+		benchBoard := Random(test.Cols, test.Rows, seed)
+		state, err := FromBoardSpec(benchBoard)
+		require.NoError(b, err)
+		test_name := fmt.Sprintf("%dx%d", test.Rows, test.Cols)
+		b.ResetTimer()
+		b.Run(test_name, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				state.Iterate()
+			}
 		})
 	}
 }
