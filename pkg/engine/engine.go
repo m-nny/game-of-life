@@ -30,9 +30,11 @@ var dxs = [][]int64{
 	{1, 1},
 }
 
-var cell_map = map[bool][]bool{
-	true:  {false, false, true, true, false, false, false, false, false},
-	false: {false, false, false, true, false, false, false, false, false},
+var cell_map = [][]bool{
+	// empty case
+	{false, false, false, true, false, false, false, false, false},
+	// full case
+	{false, false, true, true, false, false, false, false, false},
 }
 
 func (e *Engine) calcNboard() []int {
@@ -59,19 +61,16 @@ func (e *Engine) calcNboard() []int {
 
 func (e *Engine) Iterate() {
 	e.calcNboard()
-	// fmt.Printf("prevCells:\n%v\n", debugSlice(e.prevCells, e.Cols))
-	// fmt.Printf("cells:\n%v\n", debugSlice(e.cells, e.Cols))
-	// fmt.Printf("nBoard:\n%v\n", debugSlice(e.nBoard, e.Cols))
-	// fmt.Println()
 	e.prevCells, e.cells = e.cells, e.prevCells
 	e.nBoardReady = false
 	for i := range e.Rows * e.Cols {
 		n := e.nBoard[i]
-		e.cells[i] = cell_map[e.prevCells[i]][n]
+		if !e.prevCells[i] {
+			e.cells[i] = cell_map[0][n]
+		} else {
+			e.cells[i] = cell_map[1][n]
+		}
 	}
-	// fmt.Printf("prevCells:\n%v\n", debugSlice(e.prevCells, e.Cols))
-	// fmt.Printf("cells:\n%v\n", debugSlice(e.cells, e.Cols))
-	// fmt.Println()
 }
 
 func debugString(item any) string {

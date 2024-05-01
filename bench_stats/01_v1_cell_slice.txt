@@ -1,0 +1,50 @@
+goos: darwin
+goarch: arm64
+pkg: minmax.uk/game-of-life/pkg/engine
+Benchmark_Iterate
+Benchmark_Iterate/100x100
+Benchmark_Iterate/100x100-8         	      10	    150308 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/100x100-8         	      10	    145738 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/100x100-8         	      10	    142425 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/100x100-8         	      10	    139158 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/100x100-8         	      10	    137225 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/100x100-8         	      10	    135958 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/100x100-8         	      10	    140171 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/100x100-8         	      10	    139138 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/100x100-8         	      10	    145383 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/100x100-8         	      10	    138617 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/100x1000
+Benchmark_Iterate/100x1000-8        	      10	   1420129 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/100x1000-8        	      10	   1401075 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/100x1000-8        	      10	   1394496 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/100x1000-8        	      10	   1379938 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/100x1000-8        	      10	   1354562 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/100x1000-8        	      10	   1424829 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/100x1000-8        	      10	   1349171 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/100x1000-8        	      10	   1336304 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/100x1000-8        	      10	   1337312 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/100x1000-8        	      10	   1334638 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/1000x1000
+Benchmark_Iterate/1000x1000-8       	      10	  15129354 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/1000x1000-8       	      10	  14062271 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/1000x1000-8       	      10	  14289075 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/1000x1000-8       	      10	  13822746 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/1000x1000-8       	      10	  13886117 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/1000x1000-8       	      10	  13687283 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/1000x1000-8       	      10	  13750471 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/1000x1000-8       	      10	  13549221 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/1000x1000-8       	      10	  13647142 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/1000x1000-8       	      10	  13623900 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/1000x10000
+Benchmark_Iterate/1000x10000-8      	      10	 145421004 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/1000x10000-8      	      10	 141104962 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/1000x10000-8      	      10	 138937238 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/1000x10000-8      	      10	 137453771 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/1000x10000-8      	      10	 136795871 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/1000x10000-8      	      10	 136416812 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/1000x10000-8      	      10	 135904096 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/1000x10000-8      	      10	 135693658 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/1000x10000-8      	      10	 135652733 ns/op	       0 B/op	       0 allocs/op
+Benchmark_Iterate/1000x10000-8      	      10	 134932346 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	minmax.uk/game-of-life/pkg/engine	17.571s
