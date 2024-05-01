@@ -16,7 +16,7 @@ type Engine struct {
 }
 
 func (e *Engine) Iterate() {
-	fmt.Printf("e:\n%s\n", e.String())
+	// fmt.Printf("e:\n%s\n", e.String())
 	e.prevCells, e.cells = e.cells, e.prevCells
 	for row := int64(1); row+1 < e.Rows; row++ {
 		b := bitset.Empty()
@@ -39,12 +39,12 @@ func (e *Engine) Iterate() {
 
 		for col := int64(1); col+1 < e.Cols; col++ {
 			b.SetForward(e.prevCells[up_i], e.prevCells[cur_i], e.prevCells[bot_i])
-			fmt.Printf("row %d col %d\n", row, col)
-			fmt.Printf("up_i %d cur_i %d bot_i %d\n", up_i, cur_i, bot_i)
-			fmt.Printf("bitset: %d\n%s\n", b, b.Repr())
+			// fmt.Printf("row %d col %d\n", row, col)
+			// fmt.Printf("up_i %d cur_i %d bot_i %d\n", up_i, cur_i, bot_i)
+			// fmt.Printf("bitset: %d\n%s\n", b, b.Repr())
 			e.cells[cur_i-1] = bool(b.NextValue())
-			fmt.Printf("e.cells[cur_i-1]=%v\n", e.cells[cur_i-1])
-			fmt.Println()
+			// fmt.Printf("e.cells[cur_i-1]=%v\n", e.cells[cur_i-1])
+			// fmt.Println()
 
 			up_i++
 			cur_i++
