@@ -3,6 +3,8 @@ package engine
 import (
 	"fmt"
 	"strings"
+
+	"minmax.uk/game-of-life/pkg/bitset"
 )
 
 type Engine struct {
@@ -11,64 +13,43 @@ type Engine struct {
 
 	cells     []bool
 	prevCells []bool
-
-	nBoard      []int
-	nBoardReady bool
-}
-
-var dxs = [][]int64{
-	{-1, -1},
-	{-1, 0},
-	{-1, 1},
-
-	{0, -1},
-	// {0, 0},
-	{0, 1},
-
-	{1, -1},
-	{1, 0},
-	{1, 1},
-}
-
-var cell_map = [][]bool{
-	// empty case
-	{false, false, false, true, false, false, false, false, false},
-	// full case
-	{false, false, true, true, false, false, false, false, false},
-}
-
-func (e *Engine) calcNboard() []int {
-	if e.nBoardReady {
-		return e.nBoard
-	}
-	for row := range e.Rows {
-		for col := range e.Cols {
-			n := 0
-			for _, dx := range dxs {
-				n_row, n_col := (row+dx[0]+e.Rows)%e.Rows, (col+dx[1]+e.Cols)%e.Cols
-				n_i := n_col + n_row*e.Cols
-				if e.cells[n_i] {
-					n++
-				}
-			}
-			i := col + row*e.Cols
-			e.nBoard[i] = n
-		}
-	}
-	e.nBoardReady = true
-	return e.nBoard
 }
 
 func (e *Engine) Iterate() {
-	e.calcNboard()
+	fmt.Printf("e:\n%s\n", e.String())
 	e.prevCells, e.cells = e.cells, e.prevCells
-	e.nBoardReady = false
-	for i := range e.Rows * e.Cols {
-		n := e.nBoard[i]
-		if !e.prevCells[i] {
-			e.cells[i] = cell_map[0][n]
-		} else {
-			e.cells[i] = cell_map[1][n]
+	for row := int64(1); row+1 < e.Rows; row++ {
+		b := bitset.Empty()
+
+		up_i := (row - 1) * e.Cols
+		cur_i := row * e.Cols
+		bot_i := (row + 1) * e.Cols
+
+		b.SetForward(e.prevCells[up_i], e.prevCells[cur_i], e.prevCells[bot_i])
+		up_i++
+		cur_i++
+		bot_i++
+		b.Shift()
+
+		b.SetForward(e.prevCells[up_i], e.prevCells[cur_i], e.prevCells[bot_i])
+		up_i++
+		cur_i++
+		bot_i++
+		b.Shift()
+
+		for col := int64(1); col+1 < e.Cols; col++ {
+			b.SetForward(e.prevCells[up_i], e.prevCells[cur_i], e.prevCells[bot_i])
+			fmt.Printf("row %d col %d\n", row, col)
+			fmt.Printf("up_i %d cur_i %d bot_i %d\n", up_i, cur_i, bot_i)
+			fmt.Printf("bitset: %d\n%s\n", b, b.Repr())
+			e.cells[cur_i-1] = bool(b.NextValue())
+			fmt.Printf("e.cells[cur_i-1]=%v\n", e.cells[cur_i-1])
+			fmt.Println()
+
+			up_i++
+			cur_i++
+			bot_i++
+			b.Shift()
 		}
 	}
 }

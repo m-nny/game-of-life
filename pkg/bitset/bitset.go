@@ -23,6 +23,10 @@ import (
 
 type Bitset int32
 
+func Empty() Bitset {
+	return Bitset(0)
+}
+
 const (
 	BS_SIZE         = 9
 	ALL_BS_SET_SIZE = 1 << BS_SIZE

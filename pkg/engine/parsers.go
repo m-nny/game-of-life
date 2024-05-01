@@ -46,16 +46,12 @@ func MustFromString(rows, cols int64, str string) *Engine {
 func EmptyGame(rows, cols int64) *Engine {
 	cells := make([]bool, cols*rows)
 	prevCells := make([]bool, cols*rows)
-	n_board := make([]int, cols*rows)
 	return &Engine{
 		Cols: cols,
 		Rows: rows,
 
 		cells:     cells,
 		prevCells: prevCells,
-
-		nBoard:      n_board,
-		nBoardReady: false,
 	}
 }
 
