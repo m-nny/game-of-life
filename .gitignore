@@ -12,3 +12,4 @@ cmd_server
 /out
 connection_server
 /debug.log
+/test/*.out
