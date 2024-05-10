@@ -5,7 +5,10 @@ import (
 	"strings"
 
 	"minmax.uk/game-of-life/pkg/bitset"
+	"minmax.uk/game-of-life/pkg/engine"
 )
+
+var _ engine.Engine = (*BitsetEngine)(nil)
 
 type BitsetEngine struct {
 	Rows int64
@@ -13,6 +16,10 @@ type BitsetEngine struct {
 
 	cells     []bool
 	prevCells []bool
+}
+
+func (e *BitsetEngine) Name() string {
+	return "BitsetEngine"
 }
 
 func (e *BitsetEngine) Iterate() {
