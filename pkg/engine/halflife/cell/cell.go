@@ -118,3 +118,34 @@ func EmptyTree(level int) *MacroCell {
 	child := EmptyTree(level - 1)
 	return createCell(child, child, child, child)
 }
+
+// _  _  _  _ | _  _  _  _
+// _  _  _  _ | _  _  _  _
+// _  _  O  O | O  O  _  _
+// _  _  O  O | O  O  _  _
+// -----------+-----------
+// _  _  O  O | O  O  _  _
+// _  _  O  O | O  O  _  _
+// _  _  _  _ | _  _  _  _
+// _  _  _  _ | _  _  _  _
+func (m *MacroCell) Expand() *MacroCell {
+	emptySpace := EmptyTree(m.level - 1)
+	return createCell(
+		createCell(
+			emptySpace, emptySpace,
+			emptySpace, m.up_left,
+		),
+		createCell(
+			emptySpace, emptySpace,
+			m.up_right, emptySpace,
+		),
+		createCell(
+			emptySpace, m.down_left,
+			emptySpace, emptySpace,
+		),
+		createCell(
+			m.down_right, emptySpace,
+			emptySpace, emptySpace,
+		),
+	)
+}

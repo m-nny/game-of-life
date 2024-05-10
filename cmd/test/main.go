@@ -56,12 +56,12 @@ func expect() (string, error) {
 	}
 	g.Iterate()
 	lines := strings.Split(g.String(), "\n")
-	start := board.Rows >> 2
-	new_w := board.Rows >> 1
-	lines = lines[start : start+new_w]
-	for i := range lines {
-		lines[i] = lines[i][start : start+new_w]
-	}
+	// start := board.Rows >> 2
+	// new_w := board.Rows >> 1
+	// lines = lines[start : start+new_w]
+	// for i := range lines {
+	// 	lines[i] = lines[i][start : start+new_w]
+	// }
 	return strings.Join(lines, "\n"), nil
 }
 

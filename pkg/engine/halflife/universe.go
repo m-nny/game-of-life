@@ -9,12 +9,20 @@ import (
 )
 
 type Universe struct {
+	initRows int
+	initCols int
+
 	size int
 	root *cell.MacroCell
 }
 
 func (u *Universe) BoardString() string {
-	return strings.Join(u.root.BoardStrings(), "\n")
+	lines := u.root.BoardStrings()
+	lines = lines[:u.initRows]
+	for i := range lines {
+		lines[i] = lines[i][:u.initCols]
+	}
+	return strings.Join(lines, "\n")
 }
 
 func (u *Universe) DebugPrint(tree bool) {
@@ -40,21 +48,18 @@ func (m *Universe) Set(row, col int, value bool) {
 	m.root = m.root.Set(row, col, value)
 }
 
-func (m *Universe) Iterate() {
-	m.root = m.root.Iterate()
-	m.size >>= 1
-}
-
 func FromBoardSpec(board boards.BoardSpec) (*Universe, error) {
-	if board.Rows != board.Cols {
-		return nil, fmt.Errorf("board should be square")
-	}
+	// if board.Rows != board.Cols {
+	// 	return nil, fmt.Errorf("board should be square")
+	// }
 	level := 0
-	for (1 << level) < board.Rows {
+	for (1 << level) < max(board.Rows, board.Cols) {
 		level++
 	}
 	fmt.Printf("rows: %d level %d w %d\n", board.Rows, level, 1<<level)
 	u := BuildUniverse(level)
+	u.initRows = int(board.Rows)
+	u.initCols = int(board.Cols)
 	str := board.Normalized()
 	i := 0
 	for row := range board.Rows {

@@ -9,6 +9,7 @@ import (
 	"minmax.uk/game-of-life/pkg/bitset_engine"
 	"minmax.uk/game-of-life/pkg/boards"
 	"minmax.uk/game-of-life/pkg/engine"
+	"minmax.uk/game-of-life/pkg/engine/halflife"
 	"minmax.uk/game-of-life/pkg/naive_engine"
 )
 
@@ -27,6 +28,8 @@ func buildEngine(board boards.BoardSpec) (engine.Engine, error) {
 		return bitset_engine.FromBoardSpec(board)
 	} else if *engine_name == "naive" {
 		return naive_engine.FromBoardSpec(board)
+	} else if *engine_name == "halflife" {
+		return halflife.FromBoardSpec(board)
 	}
 	return nil, fmt.Errorf("unknown engine %s", *engine_name)
 }
