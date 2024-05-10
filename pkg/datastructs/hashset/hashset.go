@@ -16,12 +16,21 @@ func New[V Hashable]() HashSet[V] {
 	return m
 }
 
-func (s HashSet[V]) Contains(v V) bool {
+func (s HashSet[V]) Get(v V) (V, bool) {
 	arr, ok := s[v.Hash()]
 	if !ok {
-		return false
+		return v, false
 	}
-	return slices.ContainsFunc(arr, func(item V) bool { return item.Equals(v) })
+	idx := slices.IndexFunc(arr, func(item V) bool { return item.Equals(v) })
+	if idx == -1 {
+		return v, false
+	}
+	return arr[idx], true
+}
+
+func (s HashSet[V]) Contains(v V) bool {
+	_, ok := s.Get(v)
+	return ok
 }
 
 func (s HashSet[V]) Add(v V) {
