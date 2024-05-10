@@ -9,6 +9,7 @@ import (
 	"minmax.uk/game-of-life/pkg/bitset_engine"
 	"minmax.uk/game-of-life/pkg/boards"
 	"minmax.uk/game-of-life/pkg/engine"
+	"minmax.uk/game-of-life/pkg/naive_engine"
 )
 
 var (
@@ -24,6 +25,8 @@ var (
 func buildEngine(board boards.BoardSpec) (engine.Engine, error) {
 	if *engine_name == "bitset" {
 		return bitset_engine.FromBoardSpec(board)
+	} else if *engine_name == "naive" {
+		return naive_engine.FromBoardSpec(board)
 	}
 	return nil, fmt.Errorf("unknown engine %s", *engine_name)
 }
@@ -38,7 +41,7 @@ func run(board boards.BoardSpec) (time.Duration, error) {
 		g.Iterate()
 	}
 	took := time.Since(start_time)
-	fmt.Printf("engine: %s\n%dx%d board\b%d iterations\ntook %s", *engine_name, board.Rows, board.Cols, *iters, took)
+	fmt.Printf("engine: %s\n%dx%d board\n%d iterations\ntook %s\n", *engine_name, board.Rows, board.Cols, *iters, took)
 	return took, nil
 }
 
@@ -67,5 +70,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("engine %s\navg dur: %s", *engine_name, avg_dur)
+	fmt.Printf("engine %s\navg dur: %s\n", *engine_name, avg_dur)
 }
