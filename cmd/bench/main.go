@@ -6,10 +6,13 @@ import (
 	"log"
 	"time"
 
+	"github.com/pkg/profile"
+
 	"minmax.uk/game-of-life/pkg/bitset_engine"
 	"minmax.uk/game-of-life/pkg/boards"
 	"minmax.uk/game-of-life/pkg/engine"
 	"minmax.uk/game-of-life/pkg/engine/halflife"
+	"minmax.uk/game-of-life/pkg/engine/halflife/cell"
 	"minmax.uk/game-of-life/pkg/naive_engine"
 )
 
@@ -35,16 +38,25 @@ func buildEngine(board boards.BoardSpec) (engine.Engine, error) {
 }
 
 func run(board boards.BoardSpec) (time.Duration, error) {
+	fmt.Printf("[before parsing board]\n")
+	cell.PrintStats()
+	start_time := time.Now()
 	g, err := buildEngine(board)
 	if err != nil {
 		return 0, err
 	}
-	start_time := time.Now()
+	fmt.Printf("[after parsing board]\n")
+	fmt.Printf("parsed board in %s\n", time.Since(start_time))
+	cell.PrintStats()
+	cell.ResetStats()
+	start_time = time.Now()
 	for range *iters {
 		g.Iterate()
 	}
 	took := time.Since(start_time)
 	fmt.Printf("engine: %s\n%dx%d board\n%d iterations\ntook %s\n", *engine_name, board.Rows, board.Cols, *iters, took)
+	fmt.Printf("[iterations parsing board]\n")
+	cell.PrintStats()
 	return took, nil
 }
 
@@ -65,6 +77,7 @@ func bench(board boards.BoardSpec) (time.Duration, error) {
 }
 
 func main() {
+	defer profile.Start(profile.ProfilePath("./out/")).Stop()
 	flag.Parse()
 	board := boards.Random(*rows, *cols, *seed)
 

@@ -153,3 +153,10 @@ func (m *MacroCell) Expand() *MacroCell {
 		),
 	)
 }
+
+func PrintStats() {
+	cell_cache.PrintStats()
+}
+func ResetStats() {
+	cell_cache.ResetStats()
+}
