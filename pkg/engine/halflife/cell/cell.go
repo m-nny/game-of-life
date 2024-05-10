@@ -2,7 +2,7 @@ package cell
 
 import (
 	"minmax.uk/game-of-life/pkg/datastructs/hashset"
-	"minmax.uk/game-of-life/pkg/utils"
+	// "minmax.uk/game-of-life/pkg/utils"
 )
 
 var _ hashset.Hashable = (*MacroCell)(nil)
@@ -13,26 +13,30 @@ type MacroCell struct {
 	down_left  *MacroCell
 	down_right *MacroCell
 
+	next *MacroCell
+
 	value bool
 	level int
+	hash  hashset.Hash
 }
 
 func createLeaf(value bool) *MacroCell {
-	return (&MacroCell{value: value}).normalize()
+	h := hashset.Hash(0)
+	if value {
+		h++
+	}
+	return (&MacroCell{value: value, hash: h}).normalize()
 }
 
 func createCell(up_left, up_right, down_left, down_right *MacroCell) *MacroCell {
-	utils.Assert(up_left != nil && up_right != nil && down_left != nil && down_right != nil, "subcells cannot not be nil: %v %v %v %v", up_left, up_right, down_left, down_right)
-	utils.Assert(up_left.level == up_right.level && up_left.level == down_left.level && up_left.level == down_right.level, "subcells should have same level: %v %v %v %v", up_left, up_right, down_left, down_right)
-	return (&MacroCell{up_left: up_left, up_right: up_right, down_left: down_left, down_right: down_right, level: up_left.level + 1}).normalize()
+	// utils.Assert(up_left != nil && up_right != nil && down_left != nil && down_right != nil, "subcells cannot not be nil: %v %v %v %v", up_left, up_right, down_left, down_right)
+	// utils.Assert(up_left.level == up_right.level && up_left.level == down_left.level && up_left.level == down_right.level, "subcells should have same level: %v %v %v %v", up_left, up_right, down_left, down_right)
+	h := 3*up_left.hash + 101*up_right.hash + 1001*down_left.hash + 1007*down_right.hash + 1000007*uint64(up_right.level+1)
+	return (&MacroCell{up_left: up_left, up_right: up_right, down_left: down_left, down_right: down_right, level: up_left.level + 1, hash: h}).normalize()
 }
 
 func (m *MacroCell) Hash() hashset.Hash {
-	if m == nil {
-		panic("m is nil")
-	}
-	// TODO: this is bad hash
-	return uint64(m.level)
+	return m.hash
 }
 
 func (m *MacroCell) Same(other *MacroCell) bool {

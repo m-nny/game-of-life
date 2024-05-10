@@ -1,9 +1,5 @@
 package cell
 
-import (
-	"minmax.uk/game-of-life/pkg/utils"
-)
-
 // _  _  _  _ | _  _  _  _
 // _  _  _  _ | _  _  _  _
 // _  _  O  O | O  O  _  _
@@ -68,11 +64,13 @@ func betweenVerticalCell(up *MacroCell, down *MacroCell) *MacroCell {
 }
 
 func (m *MacroCell) Iterate() *MacroCell {
-	if m.level == 2 {
-		return m.slowIterate()
+	if m.next != nil {
+		return m.next
 	}
-	// fmt.Printf("Iterate: %+v\n", m)
-	// m.PrintBoard()
+	if m.level == 2 {
+		m.next = m.slowIterate()
+		return m.next
+	}
 	n00 := m.up_left.center()
 	n01 := betweenHorizontalCell(m.up_left, m.up_right)
 	n02 := m.up_right.center()
@@ -83,14 +81,15 @@ func (m *MacroCell) Iterate() *MacroCell {
 	n21 := betweenHorizontalCell(m.down_left, m.down_right)
 	n22 := m.down_right.center()
 
-	return createCell(
+	m.next = createCell(
 		createCell(n00, n01, n10, n11).Iterate(), createCell(n01, n02, n11, n12).Iterate(),
 		createCell(n10, n11, n20, n21).Iterate(), createCell(n11, n12, n21, n22).Iterate(),
 	)
+	return m.next
 }
 
 func (m *MacroCell) slowIterate() *MacroCell {
-	utils.Assert(m.level == 2, "should slowIterate only for m.level == 2")
+	// utils.Assert(m.level == 2, "should slowIterate only for m.level == 2")
 	w := 1 << m.level
 	b := bitset4(0)
 	for row := range w {
@@ -106,6 +105,6 @@ func (m *MacroCell) slowIterate() *MacroCell {
 		b.UpLeft().createCell(), b.UpRight().createCell(),
 		b.DownLeft().createCell(), b.DownRight().createCell(),
 	)
-	utils.Assert(res.level == m.level-1, "result should be m.level - 1")
+	// utils.Assert(res.level == m.level-1, "result should be m.level - 1")
 	return res
 }
