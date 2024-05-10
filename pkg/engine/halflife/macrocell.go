@@ -68,14 +68,14 @@ func (m *MacroCell) PrintDebug(prefix string, rec bool) {
 	}
 }
 
-var Cell_cache = hashset.New[*MacroCell]()
+var cell_cache = hashset.New[*MacroCell]()
 
 func (m *MacroCell) Normalize() *MacroCell {
-	existing, ok := Cell_cache.Get(m)
+	existing, ok := cell_cache.Get(m)
 	if ok {
 		return existing
 	}
-	Cell_cache.Add(m)
+	cell_cache.Add(m)
 	return m
 }
 
@@ -101,4 +101,26 @@ func (m MacroCell) Set(row, col int, value bool) *MacroCell {
 		panic("should not be here")
 	}
 	return (&m).Normalize()
+}
+
+func (m *MacroCell) Get(row, col int) bool {
+	w := 1 << m.level
+	if !(0 <= row && row < w && 0 <= col && col < w) {
+		panic("invalid pos")
+	}
+	if m.level == 0 {
+		return m.value
+	}
+	mid := w >> 1
+	if row < mid && col < mid {
+		return m.up_left.Get(row, col)
+	} else if row < mid && mid <= col {
+		return m.up_right.Get(row, col-mid)
+	} else if mid <= row && col < mid {
+		return m.down_left.Get(row-mid, col)
+	} else if mid <= row && mid <= col {
+		return m.down_right.Get(row-mid, col-mid)
+	} else {
+		panic("should not be here")
+	}
 }

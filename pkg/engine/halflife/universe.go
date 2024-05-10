@@ -17,7 +17,7 @@ func (u *Universe) BoardString() string {
 func (u *Universe) DebugPrint() {
 	fmt.Printf("universe: %+v\n", u)
 	fmt.Printf("%s\n", u.BoardString())
-	fmt.Printf("cache: %+v\n", Cell_cache)
+	fmt.Printf("cache: %+v\n", cell_cache)
 	u.Root.PrintDebug("", true)
 	fmt.Println()
 }

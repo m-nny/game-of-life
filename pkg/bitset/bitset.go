@@ -1,7 +1,6 @@
 package bitset
 
 import (
-	"iter"
 	"strings"
 )
 
@@ -28,8 +27,7 @@ func Empty() Bitset {
 }
 
 const (
-	BS_SIZE         = 9
-	ALL_BS_SET_SIZE = 1 << BS_SIZE
+	BS_SIZE = 9
 
 	BS_RU_BIT = 1 << 0
 	BS_RM_BIT = 1 << 1
@@ -87,16 +85,6 @@ func (b *Bitset) Repr() string {
 		}
 	}
 	return builder.String()
-}
-
-func AllBitsets() iter.Seq[Bitset] {
-	return func(yield func(Bitset) bool) {
-		for b := Bitset(0); b < ALL_BS_SET_SIZE; b++ {
-			if !yield(b) {
-				return
-			}
-		}
-	}
 }
 
 func FromBoolSlice(s [BS_SIZE]bool) Bitset {

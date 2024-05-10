@@ -1,6 +1,10 @@
 package bitset
 
+import "iter"
+
 type CellState bool
+
+const ALL_BS_SET_SIZE = 1 << BS_SIZE
 
 var (
 	CELL_DEAD CellState = false
@@ -8,6 +12,16 @@ var (
 )
 
 type bitsetmap [ALL_BS_SET_SIZE]CellState
+
+func AllBitsets() iter.Seq[Bitset] {
+	return func(yield func(Bitset) bool) {
+		for b := Bitset(0); b < ALL_BS_SET_SIZE; b++ {
+			if !yield(b) {
+				return
+			}
+		}
+	}
+}
 
 var _bitsetmap = func() bitsetmap {
 	var bitsetmap bitsetmap
