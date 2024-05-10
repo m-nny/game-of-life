@@ -5,8 +5,8 @@ import (
 	"log"
 	"time"
 
+	"minmax.uk/game-of-life/pkg/bitset_engine"
 	"minmax.uk/game-of-life/pkg/boards"
-	"minmax.uk/game-of-life/pkg/engine"
 )
 
 var (
@@ -18,7 +18,7 @@ var (
 )
 
 func bench(b boards.BoardSpec, iters int) (time.Duration, error) {
-	g, err := engine.FromBoardSpec(b)
+	g, err := bitset_engine.FromBoardSpec(b)
 	if err != nil {
 		return 0, err
 	}

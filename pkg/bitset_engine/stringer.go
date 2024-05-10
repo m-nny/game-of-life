@@ -1,4 +1,4 @@
-package engine
+package bitset_engine
 
 import (
 	"strings"
@@ -6,7 +6,7 @@ import (
 	"minmax.uk/game-of-life/pkg/boards"
 )
 
-func (state *Engine) String() string {
+func (state *BitsetEngine) String() string {
 	if state == nil {
 		return "<empty>"
 	}

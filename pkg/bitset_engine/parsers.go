@@ -1,4 +1,4 @@
-package engine
+package bitset_engine
 
 import (
 	"fmt"
@@ -7,10 +7,10 @@ import (
 	"minmax.uk/game-of-life/pkg/boards"
 )
 
-func Empty(rows, cols int64) *Engine {
+func Empty(rows, cols int64) *BitsetEngine {
 	cells := make([]bool, cols*rows)
 	prevCells := make([]bool, cols*rows)
-	return &Engine{
+	return &BitsetEngine{
 		Cols: cols,
 		Rows: rows,
 
@@ -19,7 +19,7 @@ func Empty(rows, cols int64) *Engine {
 	}
 }
 
-func FromBoardSpec(board boards.BoardSpec) (*Engine, error) {
+func FromBoardSpec(board boards.BoardSpec) (*BitsetEngine, error) {
 	rows, cols, str := board.Rows, board.Cols, board.Normalized()
 
 	if len(str) < int(cols*rows) {

@@ -1,4 +1,4 @@
-package engine
+package bitset_engine
 
 import (
 	"testing"
