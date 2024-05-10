@@ -9,11 +9,6 @@ import (
 
 var _ hashset.Hashable = (*MacroCell)(nil)
 
-var (
-	LEAF_OFF *MacroCell = &MacroCell{value: false, level: 0}
-	LEAF_ON  *MacroCell = &MacroCell{value: true, level: 1}
-)
-
 type MacroCell struct {
 	up_left    *MacroCell
 	up_right   *MacroCell
@@ -37,6 +32,7 @@ func (m *MacroCell) Same(other *MacroCell) bool {
 		return m == other
 	}
 	return m.level == other.level &&
+		m.value == other.value &&
 		m.up_left == other.up_left &&
 		m.up_right == other.up_right &&
 		m.down_left == other.down_left &&
@@ -59,15 +55,17 @@ func (m *MacroCell) BoardStrings() []string {
 	return addToDown(up, down)
 }
 
-func (m *MacroCell) PrintDebug(prefix string) {
+func (m *MacroCell) PrintDebug(prefix string, rec bool) {
 	if m == nil {
 		return
 	}
 	fmt.Printf("%s*%p %+v\n", prefix, m, m)
-	m.up_left.PrintDebug(prefix + " ")
-	m.up_right.PrintDebug(prefix + " ")
-	m.down_left.PrintDebug(prefix + " ")
-	m.down_right.PrintDebug(prefix + " ")
+	if rec {
+		m.up_left.PrintDebug(prefix+" ", m.up_left != m.up_right)
+		m.up_right.PrintDebug(prefix+" ", m.up_right != m.down_left)
+		m.down_left.PrintDebug(prefix+" ", m.down_left != m.down_right)
+		m.down_right.PrintDebug(prefix+" ", true)
+	}
 }
 
 var Cell_cache = hashset.New[*MacroCell]()
@@ -79,4 +77,28 @@ func (m *MacroCell) Normalize() *MacroCell {
 	}
 	Cell_cache.Add(m)
 	return m
+}
+
+func (m MacroCell) Set(row, col int, value bool) *MacroCell {
+	w := 1 << m.level
+	if !(0 <= row && row < w && 0 <= col && col < w) {
+		panic("invalid pos")
+	}
+	if m.level == 0 {
+		m.value = value
+		return (&m).Normalize()
+	}
+	mid := w >> 1
+	if row < mid && col < mid {
+		m.up_left = m.up_left.Set(row, col, value)
+	} else if row < mid && mid <= col {
+		m.up_right = m.up_right.Set(row, col-mid, value)
+	} else if mid <= row && col < mid {
+		m.down_left = m.down_left.Set(row-mid, col, value)
+	} else if mid <= row && mid <= col {
+		m.down_right = m.down_right.Set(row-mid, col-mid, value)
+	} else {
+		panic("should not be here")
+	}
+	return (&m).Normalize()
 }
