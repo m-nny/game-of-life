@@ -7,7 +7,7 @@ import (
 	"minmax.uk/game-of-life/pkg/boards"
 )
 
-func EmptyGame(rows, cols int64) *Engine {
+func Empty(rows, cols int64) *Engine {
 	cells := make([]bool, cols*rows)
 	prevCells := make([]bool, cols*rows)
 	return &Engine{
@@ -28,7 +28,7 @@ func FromBoardSpec(board boards.BoardSpec) (*Engine, error) {
 	if len(str) > int(cols*rows) {
 		return nil, fmt.Errorf("too much chars")
 	}
-	g := EmptyGame(rows, cols)
+	g := Empty(rows, cols)
 	i := int64(0)
 	for _, rune := range str {
 		if strings.ContainsRune(boards.EMPTY_CELLS, rune) {

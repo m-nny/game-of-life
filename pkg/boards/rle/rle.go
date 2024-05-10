@@ -62,9 +62,9 @@ func Parse(rd io.Reader) (boards.BoardSpec, error) {
 		}
 		if r == 'b' {
 			//empty
-			str += strings.Repeat(".", n)
+			str += strings.Repeat(boards.CELL_TO_CHAR[false], n)
 		} else if r == 'o' {
-			str += strings.Repeat("O", n)
+			str += strings.Repeat(boards.CELL_TO_CHAR[true], n)
 		} else {
 			return board, fmt.Errorf("unknown rune: %c", r)
 		}
