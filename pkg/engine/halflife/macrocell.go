@@ -1,6 +1,8 @@
 package halflife
 
 import (
+	"fmt"
+
 	"minmax.uk/game-of-life/pkg/boards"
 	"minmax.uk/game-of-life/pkg/datastructs/hashset"
 )
@@ -57,13 +59,24 @@ func (m *MacroCell) BoardStrings() []string {
 	return addToDown(up, down)
 }
 
-var cell_cache = hashset.New[*MacroCell]()
+func (m *MacroCell) PrintDebug(prefix string) {
+	if m == nil {
+		return
+	}
+	fmt.Printf("%s*%p %+v\n", prefix, m, m)
+	m.up_left.PrintDebug(prefix + " ")
+	m.up_right.PrintDebug(prefix + " ")
+	m.down_left.PrintDebug(prefix + " ")
+	m.down_right.PrintDebug(prefix + " ")
+}
+
+var Cell_cache = hashset.New[*MacroCell]()
 
 func (m *MacroCell) Normalize() *MacroCell {
-	existing, ok := cell_cache.Get(m)
+	existing, ok := Cell_cache.Get(m)
 	if ok {
 		return existing
 	}
-	cell_cache.Add(m)
+	Cell_cache.Add(m)
 	return m
 }
