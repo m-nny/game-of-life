@@ -17,7 +17,7 @@ func Test_rleSplitter(t *testing.T) {
 		{
 			name: "glider",
 			rle:  "bob$2bo$3o!",
-			want: []string{"b", "o", "b", "2b", "o", "3o"},
+			want: []string{"1b", "1o", "1b", "2b", "1o", "3o"},
 		},
 	}
 	for _, test := range testCases {
@@ -37,29 +37,29 @@ func Test_rleSplitter(t *testing.T) {
 	}
 }
 
-// func TestFromRLE(t *testing.T) {
-// 	testCases := []struct {
-// 		name string
-// 		rle  string
-// 		want string
-// 	}{
-// 		{
-// 			name: "glider",
-// 			rle:  "x = 3, y = 3\nbob$2bo$3o!",
-// 			want: `
-// 			.O.
-// 			..O
-// 			OOO
-// `,
-// 		},
-// 	}
-// 	for _, test := range testCases {
-// 		t.Run(test.name, func(t *testing.T) {
-// 			r := strings.NewReader(test.rle)
-// 			b, err := FromRLE(r)
-// 			require.NoError(t, err)
-//
-// 			EqualBoards(t, test.want, b.String())
-// 		})
-// 	}
-// }
+func Test_FromRLE(t *testing.T) {
+	testCases := []struct {
+		name string
+		rle  string
+		want string
+	}{
+		{
+			name: "glider",
+			rle:  "x = 3, y = 3\nbob$2bo$3o!",
+			want: `
+			.O.
+			..O
+			OOO
+`,
+		},
+	}
+	for _, test := range testCases {
+		t.Run(test.name, func(t *testing.T) {
+			r := strings.NewReader(test.rle)
+			b, err := FromRLE(r)
+			require.NoError(t, err)
+
+			EqualBoards(t, test.want, b.String())
+		})
+	}
+}

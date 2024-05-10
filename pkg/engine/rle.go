@@ -25,7 +25,11 @@ func rleSplitter(data []byte, atEOF bool) (advance int, token []byte, err error)
 		if '0' <= data[i] && data[i] <= '9' {
 			continue
 		} else if data[i] == 'b' || data[i] == 'o' {
-			return i + 1, data[start : i+1], nil
+			res := data[start : i+1]
+			if i == start {
+				res = append([]byte{'1'}, res...)
+			}
+			return i + 1, res, nil
 		} else {
 			return 0, nil, fmt.Errorf("idk")
 		}
@@ -47,10 +51,26 @@ func FromRLE(rd io.Reader) (*Engine, error) {
 	g := EmptyGame(rows, cols)
 	s := bufio.NewScanner(rd)
 	s.Split(rleSplitter)
+	cur_idx := 0
 	for s.Scan() {
 		token := s.Text()
 		fmt.Printf("token: {%s}\n", token)
+		var n int
+		var r rune
+		if _, err := fmt.Sscanf(token, "%d%c", &n, &r); err != nil {
+			return nil, err
+		}
+		fmt.Printf("n: %d r: %c\n", n, r)
 		fmt.Println()
+		if r == 'b' {
+		} else if r == 'o' {
+			for i := 0; i < n; i++ {
+				g.cells[cur_idx+i] = true
+			}
+		} else {
+			return nil, fmt.Errorf("unknown rune: %c", r)
+		}
+		cur_idx += n
 	}
 	fmt.Printf("scan done\n")
 	if err := s.Err(); err != nil {
