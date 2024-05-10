@@ -1,4 +1,4 @@
-package engine
+package rle
 
 import (
 	"bufio"
@@ -57,10 +57,10 @@ func Test_FromRLE(t *testing.T) {
 	for _, test := range testCases {
 		t.Run(test.name, func(t *testing.T) {
 			r := strings.NewReader(test.rle)
-			b, err := FromRLE(r)
+			b, err := Parse(r)
 			require.NoError(t, err)
 
-			boards_testing.EqualBoards(t, test.want, b.String())
+			boards_testing.EqualBoards(t, test.want, b.Str)
 		})
 	}
 }

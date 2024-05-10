@@ -1,9 +1,12 @@
-package engine
+package rle
 
 import (
 	"bufio"
 	"fmt"
 	"io"
+	"strings"
+
+	"minmax.uk/game-of-life/pkg/boards"
 )
 
 var _ bufio.SplitFunc = rleSplitter
@@ -42,39 +45,33 @@ func rleSplitter(data []byte, atEOF bool) (advance int, token []byte, err error)
 	return 0, nil, nil
 }
 
-func FromRLE(rd io.Reader) (*Engine, error) {
-	var cols, rows int64
-	if _, err := fmt.Fscanf(rd, "x = %d, y = %d\n", &cols, &rows); err != nil {
-		return nil, err
+func Parse(rd io.Reader) (boards.BoardSpec, error) {
+	var board boards.BoardSpec
+	if _, err := fmt.Fscanf(rd, "x = %d, y = %d\n", &board.Cols, &board.Rows); err != nil {
+		return board, err
 	}
-	fmt.Printf("rows %d cols %d \n", rows, cols)
-	g := EmptyGame(rows, cols)
-	s := bufio.NewScanner(rd)
-	s.Split(rleSplitter)
-	cur_idx := 0
-	for s.Scan() {
-		token := s.Text()
-		fmt.Printf("token: {%s}\n", token)
+	scanner := bufio.NewScanner(rd)
+	scanner.Split(rleSplitter)
+	str := ""
+	for scanner.Scan() {
+		token := scanner.Text()
 		var n int
 		var r rune
 		if _, err := fmt.Sscanf(token, "%d%c", &n, &r); err != nil {
-			return nil, err
+			return board, err
 		}
-		fmt.Printf("n: %d r: %c\n", n, r)
-		fmt.Println()
 		if r == 'b' {
+			//empty
+			str += strings.Repeat(".", n)
 		} else if r == 'o' {
-			for i := 0; i < n; i++ {
-				g.cells[cur_idx+i] = true
-			}
+			str += strings.Repeat("O", n)
 		} else {
-			return nil, fmt.Errorf("unknown rune: %c", r)
+			return board, fmt.Errorf("unknown rune: %c", r)
 		}
-		cur_idx += n
 	}
-	fmt.Printf("scan done\n")
-	if err := s.Err(); err != nil {
-		return nil, err
+	board.Str = str
+	if err := scanner.Err(); err != nil {
+		return board, err
 	}
-	return g, nil
+	return board, nil
 }
