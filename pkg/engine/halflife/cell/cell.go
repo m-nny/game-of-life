@@ -16,6 +16,14 @@ type MacroCell struct {
 	level int
 }
 
+func createLeaf(value bool) *MacroCell {
+	return (&MacroCell{value: value}).normalize()
+}
+
+func createCell(up_left, up_right, down_left, down_right *MacroCell) *MacroCell {
+	return (&MacroCell{up_left: up_left, up_right: up_right, down_left: down_left, down_right: down_right, level: up_left.level + 1}).normalize()
+}
+
 func (m *MacroCell) Hash() hashset.Hash {
 	if m == nil {
 		panic("m is nil")
@@ -101,13 +109,9 @@ func (m *MacroCell) Get(row, col int) bool {
 }
 
 func EmptyTree(level int) *MacroCell {
-	cur := &MacroCell{level: level}
-	if level > 0 {
-		child := EmptyTree(level - 1)
-		cur.up_left = child
-		cur.up_right = child
-		cur.down_left = child
-		cur.down_right = child
+	if level == 0 {
+		return createLeaf(false)
 	}
-	return cur.normalize()
+	child := EmptyTree(level - 1)
+	return createCell(child, child, child, child)
 }

@@ -9,18 +9,18 @@ import (
 
 type Universe struct {
 	size int
-	Root *cell.MacroCell
+	root *cell.MacroCell
 }
 
 func (u *Universe) BoardString() string {
-	return strings.Join(u.Root.BoardStrings(), "\n")
+	return strings.Join(u.root.BoardStrings(), "\n")
 }
 
 func (u *Universe) DebugPrint() {
 	fmt.Printf("universe: %+v\n", u)
 	fmt.Printf("%s\n", u.BoardString())
 	// fmt.Printf("cache: %+v\n", cell.cell_cache)
-	u.Root.PrintDebug("", true)
+	u.root.PrintDebug("", true)
 	fmt.Println()
 }
 
@@ -29,10 +29,14 @@ func BuildUniverse(level int) *Universe {
 	root := cell.EmptyTree(level)
 	return &Universe{
 		size: 1 << level,
-		Root: root,
+		root: root,
 	}
 }
 
 func (m *Universe) Set(row, col int, value bool) {
-	m.Root = m.Root.Set(row, col, value)
+	m.root = m.root.Set(row, col, value)
+}
+
+func (m *Universe) Iterate() {
+	m.root = m.root.Iterate()
 }

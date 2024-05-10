@@ -23,7 +23,6 @@ func (e *BitsetEngine) Name() string {
 }
 
 func (e *BitsetEngine) Iterate() {
-	// fmt.Printf("e:\n%s\n", e.String())
 	e.prevCells, e.cells = e.cells, e.prevCells
 	for row := int64(1); row+1 < e.Rows; row++ {
 		b := bitset.Empty()
