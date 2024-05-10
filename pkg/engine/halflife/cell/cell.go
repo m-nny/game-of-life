@@ -2,6 +2,7 @@ package cell
 
 import (
 	"minmax.uk/game-of-life/pkg/datastructs/hashset"
+	"minmax.uk/game-of-life/pkg/utils"
 )
 
 var _ hashset.Hashable = (*MacroCell)(nil)
@@ -21,6 +22,8 @@ func createLeaf(value bool) *MacroCell {
 }
 
 func createCell(up_left, up_right, down_left, down_right *MacroCell) *MacroCell {
+	utils.Assert(up_left != nil && up_right != nil && down_left != nil && down_right != nil, "subcells cannot not be nil: %v %v %v %v", up_left, up_right, down_left, down_right)
+	utils.Assert(up_left.level == up_right.level && up_left.level == down_left.level && up_left.level == down_right.level, "subcells should have same level: %v %v %v %v", up_left, up_right, down_left, down_right)
 	return (&MacroCell{up_left: up_left, up_right: up_right, down_left: down_left, down_right: down_right, level: up_left.level + 1}).normalize()
 }
 

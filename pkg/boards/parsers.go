@@ -21,7 +21,7 @@ var CHAR_TO_CELL = func() map[rune]bool {
 		m[cell] = true
 	}
 	return m
-}
+}()
 
 var boardUnifier = func() *strings.Replacer {
 	var pairs []string
