@@ -1,4 +1,4 @@
-package halflife
+package cell
 
 import (
 	"testing"

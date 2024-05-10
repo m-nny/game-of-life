@@ -1,9 +1,6 @@
-package halflife
+package cell
 
 import (
-	"fmt"
-
-	"minmax.uk/game-of-life/pkg/boards"
 	"minmax.uk/game-of-life/pkg/datastructs/hashset"
 )
 
@@ -46,31 +43,9 @@ func (m *MacroCell) Equals(other hashset.Hashable) bool {
 	return false
 }
 
-func (m *MacroCell) BoardStrings() []string {
-	if m.level == 0 {
-		return []string{boards.CELL_TO_CHAR[m.value]}
-	}
-	up := addToRight(m.up_left.BoardStrings(), m.up_right.BoardStrings())
-	down := addToRight(m.down_left.BoardStrings(), m.down_right.BoardStrings())
-	return addToDown(up, down)
-}
-
-func (m *MacroCell) PrintDebug(prefix string, rec bool) {
-	if m == nil {
-		return
-	}
-	fmt.Printf("%s*%p %+v\n", prefix, m, m)
-	if rec {
-		m.up_left.PrintDebug(prefix+" ", m.up_left != m.up_right)
-		m.up_right.PrintDebug(prefix+" ", m.up_right != m.down_left)
-		m.down_left.PrintDebug(prefix+" ", m.down_left != m.down_right)
-		m.down_right.PrintDebug(prefix+" ", true)
-	}
-}
-
 var cell_cache = hashset.New[*MacroCell]()
 
-func (m *MacroCell) Normalize() *MacroCell {
+func (m *MacroCell) normalize() *MacroCell {
 	existing, ok := cell_cache.Get(m)
 	if ok {
 		return existing
@@ -86,7 +61,7 @@ func (m MacroCell) Set(row, col int, value bool) *MacroCell {
 	}
 	if m.level == 0 {
 		m.value = value
-		return (&m).Normalize()
+		return (&m).normalize()
 	}
 	mid := w >> 1
 	if row < mid && col < mid {
@@ -100,7 +75,7 @@ func (m MacroCell) Set(row, col int, value bool) *MacroCell {
 	} else {
 		panic("should not be here")
 	}
-	return (&m).Normalize()
+	return (&m).normalize()
 }
 
 func (m *MacroCell) Get(row, col int) bool {
@@ -123,4 +98,16 @@ func (m *MacroCell) Get(row, col int) bool {
 	} else {
 		panic("should not be here")
 	}
+}
+
+func EmptyTree(level int) *MacroCell {
+	cur := &MacroCell{level: level}
+	if level > 0 {
+		child := EmptyTree(level - 1)
+		cur.up_left = child
+		cur.up_right = child
+		cur.down_left = child
+		cur.down_right = child
+	}
+	return cur.normalize()
 }

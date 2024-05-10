@@ -1,4 +1,4 @@
-package halflife
+package cell
 
 func addToRight(left, right []string) []string {
 	var lines []string

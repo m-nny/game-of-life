@@ -3,11 +3,13 @@ package halflife
 import (
 	"fmt"
 	"strings"
+
+	"minmax.uk/game-of-life/pkg/engine/halflife/cell"
 )
 
 type Universe struct {
 	size int
-	Root *MacroCell
+	Root *cell.MacroCell
 }
 
 func (u *Universe) BoardString() string {
@@ -17,30 +19,18 @@ func (u *Universe) BoardString() string {
 func (u *Universe) DebugPrint() {
 	fmt.Printf("universe: %+v\n", u)
 	fmt.Printf("%s\n", u.BoardString())
-	fmt.Printf("cache: %+v\n", cell_cache)
+	// fmt.Printf("cache: %+v\n", cell.cell_cache)
 	u.Root.PrintDebug("", true)
 	fmt.Println()
 }
 
 // BuildUniverse builds universe of size 2**level by 2**level
 func BuildUniverse(level int) *Universe {
-	root := emptyCell(level)
+	root := cell.EmptyTree(level)
 	return &Universe{
 		size: 1 << level,
 		Root: root,
 	}
-}
-
-func emptyCell(level int) *MacroCell {
-	cur := &MacroCell{level: level}
-	if level > 0 {
-		child := emptyCell(level - 1)
-		cur.up_left = child
-		cur.up_right = child
-		cur.down_left = child
-		cur.down_right = child
-	}
-	return cur.Normalize()
 }
 
 func (m *Universe) Set(row, col int, value bool) {
