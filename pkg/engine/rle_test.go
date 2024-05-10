@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+	boards_testing "minmax.uk/game-of-life/pkg/boards/testing"
 )
 
 func Test_rleSplitter(t *testing.T) {
@@ -59,7 +60,7 @@ func Test_FromRLE(t *testing.T) {
 			b, err := FromRLE(r)
 			require.NoError(t, err)
 
-			EqualBoards(t, test.want, b.String())
+			boards_testing.EqualBoards(t, test.want, b.String())
 		})
 	}
 }

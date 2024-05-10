@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 
+	"minmax.uk/game-of-life/pkg/boards"
 	"minmax.uk/game-of-life/pkg/engine"
 )
 
@@ -16,7 +17,7 @@ var (
 	cnt   = flag.Int("cnt", 5, "number of times to run")
 )
 
-func bench(b engine.BoardSpec, iters int) (time.Duration, error) {
+func bench(b boards.BoardSpec, iters int) (time.Duration, error) {
 	g, err := engine.FromBoardSpec(b)
 	if err != nil {
 		return 0, err
@@ -32,7 +33,7 @@ func bench(b engine.BoardSpec, iters int) (time.Duration, error) {
 
 func main() {
 	flag.Parse()
-	b := engine.Random(*rows, *cols, *seed)
+	b := boards.Random(*rows, *cols, *seed)
 
 	total_dur_sec := 0.0
 

@@ -1,4 +1,4 @@
-package engine
+package boards
 
 import (
 	"math/rand"
@@ -6,8 +6,6 @@ import (
 
 	"minmax.uk/game-of-life/pkg/utils"
 )
-
-type EngineBuilder func(spec BoardSpec) (Engine, error)
 
 type BoardSpec struct {
 	Name string
@@ -19,6 +17,10 @@ type BoardSpec struct {
 
 func (b *BoardSpec) Unpack64() (rows, cols int64, str string) {
 	return b.Rows, b.Cols, b.Str
+}
+
+func (b *BoardSpec) Normalized() string {
+	return NormalizeBoard(b.Str)
 }
 
 var Block = BoardSpec{

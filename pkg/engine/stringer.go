@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
+	"minmax.uk/game-of-life/pkg/boards"
 )
 
 type Styles struct {
@@ -25,11 +26,11 @@ func DefaultStyles() (s Styles) {
 }
 
 func (styles *Styles) Cell(hasLife bool) string {
-	return CELL_TO_CHAR[hasLife]
+	return boards.CELL_TO_CHAR[hasLife]
 }
 
 func (styles *Styles) CellColor(hasLife bool, n_board int) string {
-	r := CELL_TO_CHAR[hasLife]
+	r := boards.CELL_TO_CHAR[hasLife]
 	style := styles.Fine
 	if hasLife {
 		if n_board < 2 {
